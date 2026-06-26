@@ -51,4 +51,44 @@
     tick();
     setInterval(tick, 1000);
   }
+
+  // --- currency tabs ---
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.getAttribute('data-pay');
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      document.querySelectorAll('.pay-panel').forEach(function (p) {
+        p.hidden = (p.id !== 'pay-' + key);
+        p.classList.toggle('active', p.id === 'pay-' + key);
+      });
+    });
+  });
+
+  // --- copy to clipboard ---
+  var copyText = function (el) {
+    var txt = el.textContent.trim();
+    var done = function () {
+      el.classList.add('copied');
+      setTimeout(function () { el.classList.remove('copied'); }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done).catch(function () { done(); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta); done();
+    }
+  };
+  document.querySelectorAll('.copyable').forEach(function (el) {
+    el.addEventListener('click', function () { copyText(el); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyText(el); }
+    });
+  });
 })();
