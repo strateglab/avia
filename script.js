@@ -42,8 +42,9 @@
   // --- hero clock (Kyiv) ---
   var clock = document.getElementById('clock');
   if (clock) {
+    var loc = document.documentElement.lang === 'en' ? 'en-GB' : 'uk-UA';
     var tick = function () {
-      var t = new Date().toLocaleTimeString('uk-UA', {
+      var t = new Date().toLocaleTimeString(loc, {
         hour12: false, timeZone: 'Europe/Kyiv'
       });
       clock.textContent = t + ' KYIV';
